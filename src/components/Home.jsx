@@ -14,7 +14,7 @@ const Home = () => {
   const cards = [
     { id: 1, title: "About Progressive Kerala movement   " , image: aboutImage, path: "/about"},
     { id: 2, title: "Our Vision on Education System", image: educationImage, path: "/education" },
-    { id: 3, title: "Our Vision on Social Security", image: socialSecurityImage, path: "/social-security" },
+    { id: 3, title: "Our Vision on Social Security", image: socialSecurityImage, path: "/socialSecurity" },
     { id: 4, title: "Our Vision on Abkari Policy", image: abkariImage, path: "/abkari-policy" },
     { id: 5, title: "Our Vision on State Revenue", image: revenueImage, path: "/state-revenue" },
     { id: 6, title: "Our Vision on Healthcare", image: healthcareImage, path: "/healthcare" },
