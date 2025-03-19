@@ -2,17 +2,25 @@ import { Grid, Card, CardContent, Typography, Box } from "@mui/material";
 import { Link } from "react-router-dom";
 import aboutImage from "../assets/about.jpg";
 
+import educationImage from "../assets/education.jpg";
+import socialSecurityImage from "../assets/socialsecurity.jpg";
+import abkariImage from "../assets/abkari.jpg";
+import revenueImage from "../assets/revenue.jpg";
+import healthcareImage from "../assets/healthcare.jpg";
+import transportImage from "../assets/transport.jpg";
+import wildlifeImage from "../assets/wildlife.jpg";
+import sportsImage from "../assets/sports.jpg";
 const Home = () => {
   const cards = [
     { id: 1, title: "About Progressive Kerala movement   " , image: aboutImage, path: "/about"},
-    { id: 2, title: "Our Vision on Education System", image: "/images/education.jpg", path: "/education" },
-    { id: 3, title: "Our Vision on Social Security", image: "/images/social-security.jpg", path: "/social-security" },
-    { id: 4, title: "Our Vision on Abkari Policy", image: "/images/abkari.jpg", path: "/abkari-policy" },
-    { id: 5, title: "Our Vision on State Revenue", image: "/images/revenue.jpg", path: "/state-revenue" },
-    { id: 6, title: "Our Vision on Healthcare", image: "/images/healthcare.jpg", path: "/healthcare" },
-    { id: 7, title: "Our Vision on Transportation", image: "/images/transport.jpg", path: "/transportation" },
-    { id: 8, title: "Human-Wildlife Challenges", image: "/images/wildlife.jpg", path: "/wildlife" },
-    { id: 9, title: "Sports and Physical Education", image: "/images/sports.jpg", path: "/sports" },
+    { id: 2, title: "Our Vision on Education System", image: educationImage, path: "/education" },
+    { id: 3, title: "Our Vision on Social Security", image: socialSecurityImage, path: "/social-security" },
+    { id: 4, title: "Our Vision on Abkari Policy", image: abkariImage, path: "/abkari-policy" },
+    { id: 5, title: "Our Vision on State Revenue", image: revenueImage, path: "/state-revenue" },
+    { id: 6, title: "Our Vision on Healthcare", image: healthcareImage, path: "/healthcare" },
+    { id: 7, title: "Our Vision on Transportation", image: transportImage, path: "/transportation" },
+    { id: 8, title: "Human-Wildlife Challenges", image: wildlifeImage, path: "/wildlife" },
+    { id: 9, title: "Sports and Physical Education", image: sportsImage , path: "/sports" },
   ];
 
   return (
