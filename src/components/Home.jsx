@@ -1,9 +1,10 @@
 import { Grid, Card, CardContent, Typography, Box } from "@mui/material";
 import { Link } from "react-router-dom";
+import aboutImage from "../assets/about.jpg";
 
 const Home = () => {
   const cards = [
-    { id: 1, title: "About Progressive Kerala movement   " , image: "/images/about.jpg", path: "/about"},
+    { id: 1, title: "About Progressive Kerala movement   " , image: aboutImage, path: "/about"},
     { id: 2, title: "Our Vision on Education System", image: "/images/education.jpg", path: "/education" },
     { id: 3, title: "Our Vision on Social Security", image: "/images/social-security.jpg", path: "/social-security" },
     { id: 4, title: "Our Vision on Abkari Policy", image: "/images/abkari.jpg", path: "/abkari-policy" },
