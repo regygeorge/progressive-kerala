@@ -14,25 +14,26 @@ const About = () => {
           </Typography>
 
           <Typography variant="body1" align="justify" paragraph>
-            **Progressive Kerala** is a movement dedicated to transforming the state into a developed region by harnessing 
-            the power of information technology. We aim to **increase the standard of living** and **empower every citizen** 
-            to build a better future.
+            <strong>Progressive Kerala</strong> is a movement dedicated to transforming the state into a developed region 
+            by harnessing the power of information technology. We aim to <strong>increase the standard of living</strong> 
+            and <strong>empower every citizen</strong> to build a better future.
           </Typography>
 
           <Typography variant="body1" align="justify" paragraph>
-            Despite frequent **political changes**, Kerala has struggled to achieve major breakthroughs in governance and 
-            development. This movement seeks to break the cycle of stagnation by focusing on **technology-driven solutions**.
+            Despite frequent <strong>political changes</strong>, Kerala has struggled to achieve major breakthroughs 
+            in governance and development. This movement seeks to break the cycle of stagnation by focusing on 
+            <strong>technology-driven solutions</strong>.
           </Typography>
 
           <Typography variant="body1" align="justify" paragraph>
-            Our initiative is centered on **eliminating corruption, ensuring transparency, and optimizing administrative efficiency**.
-            By leveraging IT solutions, we strive to create a system where governance is **accountable, effective, and truly beneficial** 
-            to every citizen.
+            Our initiative is centered on <strong>eliminating corruption, ensuring transparency, and optimizing 
+            administrative efficiency</strong>. By leveraging IT solutions, we strive to create a system where governance 
+            is <strong>accountable, effective, and truly beneficial</strong> to every citizen.
           </Typography>
 
           <Typography variant="body1" align="justify" paragraph>
-            This is not just a vision, but a practical approach to **modernizing governance** in Kerala, bringing it on par with 
-            leading nations in the world.
+            This is not just a vision, but a practical approach to <strong>modernizing governance</strong> in Kerala, 
+            bringing it on par with leading nations in the world.
           </Typography>
 
           {/* Back to Home Button */}
