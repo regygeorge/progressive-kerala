@@ -24,9 +24,9 @@ const Sports = () => {
             1. Policy Objective
           </Typography>
           <Typography variant="body1" align="justify" paragraph>
-            The **Kerala Sports & Physical Education Development Policy (KSPEP)** aims to **create a world-class sporting ecosystem** 
-            by integrating **AI-driven training, cutting-edge sports infrastructure, and school-level talent development programs**.  
-            The policy focuses on **grassroots sports, athlete welfare, and international-level coaching**.
+            The <strong>Kerala Sports & Physical Education Development Policy (KSPEP)</strong> aims to <strong>create a world-class sporting ecosystem</strong> 
+            by integrating <strong>AI-driven training, cutting-edge sports infrastructure, and school-level talent development programs</strong>.  
+            The policy focuses on <strong>grassroots sports, athlete welfare, and international-level coaching</strong>.
           </Typography>
 
           <Divider sx={{ my: 3 }} />
@@ -41,9 +41,9 @@ const Sports = () => {
             A. AI-Based Athlete Training & Performance Analytics
           </Typography>
           <Typography variant="body2">
-            ✅ AI-powered **motion capture and performance analysis** for athletes.  
-            ✅ **AI-driven diet and training plans** based on real-time athlete data.  
-            ✅ **Smart wearables and sensors** for tracking injury prevention and rehabilitation.  
+            ✅ AI-powered <strong>motion capture and performance analysis</strong> for athletes. <br/>
+            ✅ <strong>AI-driven diet and training plans</strong> based on real-time athlete data. <br/>
+            ✅ <strong>Smart wearables and sensors</strong> for tracking injury prevention and rehabilitation.
           </Typography>
 
           <Divider sx={{ my: 2 }} />
@@ -53,9 +53,9 @@ const Sports = () => {
             B. World-Class Sports Infrastructure Development
           </Typography>
           <Typography variant="body2">
-            ✅ **Kerala International Sports City** to be built with **Olympic-grade facilities**.  
-            ✅ **AI-powered stadium management** to enhance fan experience and optimize ticket pricing.  
-            ✅ **Multipurpose sports academies in every district** for coaching and training.  
+            ✅ <strong>Kerala International Sports City</strong> to be built with <strong>Olympic-grade facilities</strong>. <br/>
+            ✅ <strong>AI-powered stadium management</strong> to enhance fan experience and optimize ticket pricing. <br/>
+            ✅ <strong>Multipurpose sports academies in every district</strong> for coaching and training.
           </Typography>
 
           <Divider sx={{ my: 2 }} />
@@ -65,9 +65,9 @@ const Sports = () => {
             C. School-Level Physical Education & Talent Identification
           </Typography>
           <Typography variant="body2">
-            ✅ **Mandatory daily physical education (PE) classes** in all schools.  
-            ✅ AI-powered **sports talent identification system** to detect young athletes early.  
-            ✅ **Integration of esports & virtual reality training** in school sports programs.  
+            ✅ <strong>Mandatory daily physical education (PE) classes</strong> in all schools. <br/>
+            ✅ AI-powered <strong>sports talent identification system</strong> to detect young athletes early. <br/>
+            ✅ <strong>Integration of esports & virtual reality training</strong> in school sports programs.
           </Typography>
 
           <Divider sx={{ my: 2 }} />
@@ -77,9 +77,9 @@ const Sports = () => {
             D. Athlete Welfare & Career Development
           </Typography>
           <Typography variant="body2">
-            ✅ **State-funded athlete scholarships** for training in international facilities.  
-            ✅ **Job security & pension plans** for retired athletes.  
-            ✅ **AI-driven mental health programs** for athletes under high-pressure environments.  
+            ✅ <strong>State-funded athlete scholarships</strong> for training in international facilities. <br/>
+            ✅ <strong>Job security & pension plans</strong> for retired athletes. <br/>
+            ✅ <strong>AI-driven mental health programs</strong> for athletes under high-pressure environments.
           </Typography>
 
           <Divider sx={{ my: 3 }} />
@@ -128,9 +128,10 @@ const Sports = () => {
             4. Conclusion
           </Typography>
           <Typography variant="body1" align="justify" paragraph>
-            The **Kerala Sports & Physical Education Development Policy (KSPEP)** will transform Kerala into **India’s premier sports hub** 
-            by leveraging **AI, modern infrastructure, and school-level sports integration**.  
-            With an estimated **₹23,000 crore annual revenue**, Kerala will be able to **train world-class athletes, host global sporting events, and promote youth participation in physical fitness**.
+            The <strong>Kerala Sports & Physical Education Development Policy (KSPEP)</strong> will transform Kerala into <strong>India’s premier sports hub</strong> 
+            by leveraging <strong>AI, modern infrastructure, and school-level sports integration</strong>.  
+            With an estimated <strong>₹23,000 crore annual revenue</strong>, Kerala will be able to <strong>train world-class athletes, host global sporting events, 
+            and promote youth participation in physical fitness</strong>.
           </Typography>
 
           <Divider sx={{ my: 3 }} />

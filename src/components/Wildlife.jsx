@@ -24,7 +24,9 @@ const Wildlife = () => {
             1. Policy Objective
           </Typography>
           <Typography variant="body1" align="justify" paragraph>
-            The **Kerala Wildlife Protection & Human-Wildlife Conflict Mitigation Policy (KWP-HWCMP)** aims to ensure the **coexistence of wildlife and humans** by focusing on **biodiversity conservation, AI-powered wildlife monitoring, and sustainable conflict prevention measures**.
+            The <strong>Kerala Wildlife Protection & Human-Wildlife Conflict Mitigation Policy (KWP-HWCMP)</strong> aims to ensure the 
+            <strong> coexistence of wildlife and humans</strong> by focusing on <strong>biodiversity conservation, AI-powered wildlife 
+            monitoring, and sustainable conflict prevention measures</strong>.
           </Typography>
 
           <Divider sx={{ my: 3 }} />
@@ -39,9 +41,9 @@ const Wildlife = () => {
             A. AI-Based Wildlife Monitoring & Early Warning Systems
           </Typography>
           <Typography variant="body2">
-            ✅ AI-powered **drone surveillance & thermal imaging** to track animal movements in real time.  
-            ✅ **GPS collars for elephants, tigers, and leopards** to monitor migration patterns and potential conflicts.  
-            ✅ **AI-based predictive analytics** to warn villages about potential wildlife movement near human settlements.  
+            ✅ AI-powered <strong>drone surveillance & thermal imaging</strong> to track animal movements in real time. <br/>
+            ✅ <strong>GPS collars for elephants, tigers, and leopards</strong> to monitor migration patterns and potential conflicts. <br/>
+            ✅ <strong>AI-based predictive analytics</strong> to warn villages about potential wildlife movement near human settlements.
           </Typography>
 
           <Divider sx={{ my: 2 }} />
@@ -51,9 +53,9 @@ const Wildlife = () => {
             B. Human-Wildlife Conflict Prevention Strategies
           </Typography>
           <Typography variant="body2">
-            ✅ **AI-powered electric fencing** that activates based on real-time animal proximity detection.  
-            ✅ **Smart lighting systems** near forest borders to deter wildlife from entering human settlements.  
-            ✅ **Community-driven conflict response teams** trained to handle emergency wildlife encounters.  
+            ✅ <strong>AI-powered electric fencing</strong> that activates based on real-time animal proximity detection. <br/>
+            ✅ <strong>Smart lighting systems</strong> near forest borders to deter wildlife from entering human settlements. <br/>
+            ✅ <strong>Community-driven conflict response teams</strong> trained to handle emergency wildlife encounters.
           </Typography>
 
           <Divider sx={{ my: 2 }} />
@@ -63,9 +65,9 @@ const Wildlife = () => {
             C. Sustainable Habitat Conservation & Reforestation
           </Typography>
           <Typography variant="body2">
-            ✅ **AI-assisted afforestation programs** to restore animal habitats.  
-            ✅ **Eco-corridors connecting fragmented forests** to reduce human-wildlife interaction.  
-            ✅ **Ban on deforestation in high-conflict zones** to prevent habitat destruction.  
+            ✅ <strong>AI-assisted afforestation programs</strong> to restore animal habitats. <br/>
+            ✅ <strong>Eco-corridors connecting fragmented forests</strong> to reduce human-wildlife interaction. <br/>
+            ✅ <strong>Ban on deforestation in high-conflict zones</strong> to prevent habitat destruction.
           </Typography>
 
           <Divider sx={{ my: 2 }} />
@@ -75,9 +77,9 @@ const Wildlife = () => {
             D. Wildlife Conflict Compensation & Farmer Protection
           </Typography>
           <Typography variant="body2">
-            ✅ **Fast-track compensation** for farmers whose crops are damaged by wildlife.  
-            ✅ **Insurance for human and livestock injuries** due to animal attacks.  
-            ✅ **Government subsidies for non-lethal wildlife deterrents**, such as chili fences and beehive fencing.  
+            ✅ <strong>Fast-track compensation</strong> for farmers whose crops are damaged by wildlife. <br/>
+            ✅ <strong>Insurance for human and livestock injuries</strong> due to animal attacks. <br/>
+            ✅ <strong>Government subsidies for non-lethal wildlife deterrents</strong>, such as chili fences and beehive fencing.
           </Typography>
 
           <Divider sx={{ my: 3 }} />
@@ -126,8 +128,11 @@ const Wildlife = () => {
             4. Conclusion
           </Typography>
           <Typography variant="body1" align="justify" paragraph>
-            The **Kerala Wildlife Protection & Human-Wildlife Conflict Mitigation Policy (KWP-HWCMP)** ensures that Kerala's **wildlife and human settlements can coexist harmoniously** through **AI-powered monitoring, proactive conflict prevention, and sustainable conservation efforts**.  
-            With an estimated **₹19,000 crore annual revenue**, Kerala will be able to **fund large-scale habitat protection, enhance eco-tourism, and implement advanced AI-driven wildlife management**.
+            The <strong>Kerala Wildlife Protection & Human-Wildlife Conflict Mitigation Policy (KWP-HWCMP)</strong> ensures that Kerala's 
+            <strong> wildlife and human settlements can coexist harmoniously</strong> through <strong>AI-powered monitoring, proactive 
+            conflict prevention, and sustainable conservation efforts</strong>. <br/><br/>
+            With an estimated <strong>₹19,000 crore annual revenue</strong>, Kerala will be able to <strong>fund large-scale habitat 
+            protection, enhance eco-tourism, and implement advanced AI-driven wildlife management</strong>.
           </Typography>
 
           <Divider sx={{ my: 3 }} />
