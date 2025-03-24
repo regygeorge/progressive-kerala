@@ -1,0 +1,10 @@
+/* src/components/TiptapEditor.css */
+.editor-wrapper {
+    border: 1px solid #ccc;
+    padding: 12px;
+    border-radius: 8px;
+    min-height: 200px;
+    margin-bottom: 16px;
+    background: white;
+  }
+  
