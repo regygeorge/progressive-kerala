@@ -13,6 +13,7 @@ import AdminForm from "./components/AdminForm.jsx";
 import Login from "./components/Login.jsx";
 import Header from "./components/Header.jsx";
 import InviteFriendsCard from "./components/InviteFriendsCard.jsx";
+import SignupPage from "./components/SignupPage.jsx"
 
 // Import other pages
 
@@ -34,6 +35,8 @@ const App = () => {
         <Route path="/admin" element={<AdminForm />} />
         <Route path="/login" element={<Login />} />
         <Route path="/invite" element={<InviteFriendsCard />} />
+        <Route path="/signup" element={<SignupPage />} />
+        
          
 
         {/* Add routes for other pages */}
