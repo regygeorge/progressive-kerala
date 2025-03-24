@@ -1,143 +1,221 @@
-import { 
-  Card, CardContent, Typography, Button, 
-  Container, Box, Divider, Table, TableBody, TableCell, 
-  TableContainer, TableHead, TableRow, Paper 
+import React, { useEffect, useState } from "react";
+import {
+  Card, CardContent, Typography, Button, TextField,
+  Container, Box, Divider, Paper
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Wildlife = () => {
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
+  const [sections, setSections] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [commentText, setCommentText] = useState("");
+  const [replyInputs, setReplyInputs] = useState({});
+  const policyHead = "KWP-HWCMP";
+
+  const userEmail = localStorage.getItem("userEmail"); // get email from login
+
+  useEffect(() => {
+    axios.get(`/mnm-api/policy/${policyHead}`)
+      .then(res => {
+        const sorted = res.data.sort((a, b) => a.sectionOrder - b.sectionOrder);
+        setSections(sorted);
+      })
+      .catch(err => console.error("Error loading policy sections", err));
+    axios.get(`/mnm-api/comments/by-policy/${policyHead}`)
+      .then(res => setComments(res.data))
+      .catch(err => console.error("Error loading comments", err));
+  }, []);
+
+  const handleCommentSubmit = () => {
+    if (!commentText || !userEmail) return;
+
+    const commentData = { userEmail, commentText, policyHead };
+
+    axios.post("/mnm-api/comments/add", commentData)
+      .then((res) => {
+        setComments(prev => [...prev, res.data]);
+        setCommentText("");
+      })
+      .catch(err => console.error("Error posting comment", err));
+  };
+
+  const handleReplySubmit = (parentCommentId) => {
+    const reply = replyInputs[parentCommentId];
+    if (!reply?.commentText || !userEmail) return;
+
+    const replyData = {
+      userEmail,
+      commentText: reply.commentText
+    };
+
+    axios.post(`/mnm-api/comments/reply/${parentCommentId}`, replyData)
+      .then(() => {
+        setComments(prev =>
+          prev.map(comment =>
+            comment.id === parentCommentId
+              ? { ...comment, replies: [...(comment.replies || []), replyData] }
+              : comment
+          )
+        );
+        setReplyInputs(prev => {
+          const updated = { ...prev };
+          delete updated[parentCommentId];
+          return updated;
+        });
+      })
+      .catch(err => console.error("Error posting reply", err));
+  };
 
   return (
     <Container maxWidth="md">
-      {/* Main Card for Wildlife Policy */}
       <Card sx={{ mt: 6, p: 4, boxShadow: 4, borderRadius: 3 }}>
         <CardContent>
           <Typography variant="h4" align="center" gutterBottom color="primary" fontWeight="bold">
-            Kerala Wildlife Protection & Human-Wildlife Conflict Mitigation Policy (KWP-HWCMP)
+          Kerala Wildlife Protection & Human-Wildlife Conflict Mitigation Policy (KWP-HWCMP)
           </Typography>
 
           <Divider sx={{ my: 3 }} />
 
-          {/* Policy Objective */}
-          <Typography variant="h5" gutterBottom color="secondary" fontWeight="bold">
-            1. Policy Objective
-          </Typography>
-          <Typography variant="body1" align="justify" paragraph>
-            The <strong>Kerala Wildlife Protection & Human-Wildlife Conflict Mitigation Policy (KWP-HWCMP)</strong> aims to ensure the 
-            <strong> coexistence of wildlife and humans</strong> by focusing on <strong>biodiversity conservation, AI-powered wildlife 
-            monitoring, and sustainable conflict prevention measures</strong>.
-          </Typography>
+          {sections.map((section, index) => (
+            <Box key={index} sx={{ mb: 6 }}>
+              <Typography variant="h5" gutterBottom color="secondary" fontWeight="bold">
+                {section.sectionOrder}. {section.sectionTitle}
+              </Typography>
+              <Box
+                component="div"
+                sx={{
+                  fontSize: "0.95rem",
+                  lineHeight: 1.7,
+                  "& table": {
+                    width: "100%",
+                    borderCollapse: "collapse",
+                    marginTop: 2,
+                  },
+                  "& th, & td": {
+                    border: "1px solid #ddd",
+                    padding: "8px",
+                    textAlign: "left",
+                  },
+                  "& th": {
+                    backgroundColor: "#f5f5f5",
+                    fontWeight: "bold",
+                  },
+                  "& tr:nth-of-type(even)": {
+                    backgroundColor: "#f9f9f9",
+                  },
+                  "& ul": {
+                    paddingLeft: "1.5rem"
+                  },
+                  "& li": {
+                    marginBottom: "0.5rem"
+                  }
+                }}
+                dangerouslySetInnerHTML={{ __html: section.htmlContent }}
+              />
+              <Divider sx={{ my: 4 }} />
+            </Box>
+          ))}
 
-          <Divider sx={{ my: 3 }} />
+          {/* Global Comments Section */}
+          <Box sx={{ mt: 4, p: 2, border: "1px solid #ccc", borderRadius: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              💬 Comments on the Policy
+            </Typography>
 
-          {/* Key Components */}
-          <Typography variant="h5" gutterBottom color="secondary" fontWeight="bold">
-            2. Key Components of the Policy
-          </Typography>
+            {comments.map((cmt, i) => (
+              <Box key={i} sx={{ mb: 2 }}>
+                <Paper sx={{ p: 2, backgroundColor: "#f9f9f9" }}>
+                  <Typography variant="body2" sx={{ fontWeight: 600 }}>{cmt.userEmail}</Typography>
+                  <Typography variant="body2">{cmt.commentText}</Typography>
 
-          {/* AI-Based Wildlife Monitoring */}
-          <Typography variant="h6" color="primary" fontWeight="bold">
-            A. AI-Based Wildlife Monitoring & Early Warning Systems
-          </Typography>
-          <Typography variant="body2">
-            ✅ AI-powered <strong>drone surveillance & thermal imaging</strong> to track animal movements in real time. <br/>
-            ✅ <strong>GPS collars for elephants, tigers, and leopards</strong> to monitor migration patterns and potential conflicts. <br/>
-            ✅ <strong>AI-based predictive analytics</strong> to warn villages about potential wildlife movement near human settlements.
-          </Typography>
+                  {userEmail && (
+                    <Button
+                      size="small"
+                      onClick={() => setReplyInputs(prev => ({ ...prev, [cmt.id]: {} }))}
+                      sx={{ mt: 1 }}
+                    >
+                      Reply
+                    </Button>
+                  )}
+                </Paper>
 
-          <Divider sx={{ my: 2 }} />
+                {/* Replies */}
+                {(cmt.replies || []).map((reply, j) => (
+                  <Paper
+                    key={j}
+                    sx={{
+                      ml: 4,
+                      mt: 1,
+                      p: 2,
+                      backgroundColor: "#f0f0f0",
+                      borderLeft: "3px solid #ccc"
+                    }}
+                  >
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>{reply.userEmail}</Typography>
+                    <Typography variant="body2">{reply.commentText}</Typography>
+                  </Paper>
+                ))}
 
-          {/* Human-Wildlife Conflict Prevention */}
-          <Typography variant="h6" color="primary" fontWeight="bold">
-            B. Human-Wildlife Conflict Prevention Strategies
-          </Typography>
-          <Typography variant="body2">
-            ✅ <strong>AI-powered electric fencing</strong> that activates based on real-time animal proximity detection. <br/>
-            ✅ <strong>Smart lighting systems</strong> near forest borders to deter wildlife from entering human settlements. <br/>
-            ✅ <strong>Community-driven conflict response teams</strong> trained to handle emergency wildlife encounters.
-          </Typography>
+                {/* Reply Input */}
+                {userEmail && replyInputs[cmt.id] !== undefined && (
+                  <Box sx={{ ml: 4, mt: 1 }}>
+                    <TextField
+                      size="small"
+                      label="Your Reply"
+                      fullWidth
+                      multiline
+                      rows={2}
+                      onChange={(e) =>
+                        setReplyInputs(prev => ({
+                          ...prev,
+                          [cmt.id]: {
+                            ...prev[cmt.id],
+                            commentText: e.target.value
+                          }
+                        }))
+                      }
+                    />
+                    <Button
+                      variant="outlined"
+                      sx={{ mt: 1 }}
+                      onClick={() => handleReplySubmit(cmt.id)}
+                    >
+                      Submit Reply
+                    </Button>
+                  </Box>
+                )}
+              </Box>
+            ))}
 
-          <Divider sx={{ my: 2 }} />
+            {/* New Comment Input */}
+            {userEmail ? (
+              <Box sx={{ mt: 2 }}>
+                <TextField
+                  label="Add a comment"
+                  size="small"
+                  fullWidth
+                  multiline
+                  rows={2}
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                />
+                <Button
+                  variant="contained"
+                  sx={{ mt: 1 }}
+                  onClick={handleCommentSubmit}
+                >
+                  Post Comment
+                </Button>
+              </Box>
+            ) : (
+              <Typography variant="body2" sx={{ mt: 2, color: "gray" }}>
+                Please <Button size="small" onClick={() => navigate("/login")}>login</Button> to comment.
+              </Typography>
+            )}
+          </Box>
 
-          {/* Sustainable Habitat Conservation */}
-          <Typography variant="h6" color="primary" fontWeight="bold">
-            C. Sustainable Habitat Conservation & Reforestation
-          </Typography>
-          <Typography variant="body2">
-            ✅ <strong>AI-assisted afforestation programs</strong> to restore animal habitats. <br/>
-            ✅ <strong>Eco-corridors connecting fragmented forests</strong> to reduce human-wildlife interaction. <br/>
-            ✅ <strong>Ban on deforestation in high-conflict zones</strong> to prevent habitat destruction.
-          </Typography>
-
-          <Divider sx={{ my: 2 }} />
-
-          {/* Compensation & Support System */}
-          <Typography variant="h6" color="primary" fontWeight="bold">
-            D. Wildlife Conflict Compensation & Farmer Protection
-          </Typography>
-          <Typography variant="body2">
-            ✅ <strong>Fast-track compensation</strong> for farmers whose crops are damaged by wildlife. <br/>
-            ✅ <strong>Insurance for human and livestock injuries</strong> due to animal attacks. <br/>
-            ✅ <strong>Government subsidies for non-lethal wildlife deterrents</strong>, such as chili fences and beehive fencing.
-          </Typography>
-
-          <Divider sx={{ my: 3 }} />
-
-          {/* Revenue Model */}
-          <Typography variant="h5" gutterBottom color="secondary" fontWeight="bold">
-            3. Funding & Revenue Model
-          </Typography>
-          <TableContainer component={Paper} sx={{ mt: 2, mb: 4 }}>
-            <Table>
-              <TableHead>
-                <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
-                  <TableCell><strong>Revenue Source</strong></TableCell>
-                  <TableCell align="right"><strong>Estimated Revenue (₹ Crore/year)</strong></TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell>Eco-Tourism Revenue from AI-Powered Wildlife Safaris</TableCell>
-                  <TableCell align="right">5,000</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>State-Wildlife Conservation Fund & Donations</TableCell>
-                  <TableCell align="right">3,000</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>AI-Enabled Sustainable Forestry & Carbon Credit Trading</TableCell>
-                  <TableCell align="right">4,000</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Government Budget Allocation for Wildlife Protection</TableCell>
-                  <TableCell align="right">7,000</TableCell>
-                </TableRow>
-                <TableRow sx={{ backgroundColor: "#e3f2fd" }}>
-                  <TableCell><strong>Total Estimated Revenue</strong></TableCell>
-                  <TableCell align="right"><strong>₹19,000 crore/year</strong></TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-
-          <Divider sx={{ my: 3 }} />
-
-          {/* Conclusion */}
-          <Typography variant="h5" gutterBottom color="secondary" fontWeight="bold">
-            4. Conclusion
-          </Typography>
-          <Typography variant="body1" align="justify" paragraph>
-            The <strong>Kerala Wildlife Protection & Human-Wildlife Conflict Mitigation Policy (KWP-HWCMP)</strong> ensures that Kerala's 
-            <strong> wildlife and human settlements can coexist harmoniously</strong> through <strong>AI-powered monitoring, proactive 
-            conflict prevention, and sustainable conservation efforts</strong>. <br/><br/>
-            With an estimated <strong>₹19,000 crore annual revenue</strong>, Kerala will be able to <strong>fund large-scale habitat 
-            protection, enhance eco-tourism, and implement advanced AI-driven wildlife management</strong>.
-          </Typography>
-
-          <Divider sx={{ my: 3 }} />
-
-          {/* Back to Home Button */}
           <Box display="flex" justifyContent="center" mt={4}>
             <Button variant="contained" color="primary" size="large" onClick={() => navigate("/")}>
               Back to Home
@@ -150,3 +228,4 @@ const Wildlife = () => {
 };
 
 export default Wildlife;
+ 

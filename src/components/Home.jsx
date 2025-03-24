@@ -21,6 +21,8 @@ const Home = () => {
     { id: 7, title: "Our Vision on Transportation", image: transportImage, path: "/transportation" },
     { id: 8, title: "Human-Wildlife Challenges", image: wildlifeImage, path: "/wildlife" },
     { id: 9, title: "Sports and Physical Education", image: sportsImage , path: "/sports" },
+    { id: 10, title: "Invite Others", image: sportsImage , path: "/invite" },
+    { id: 11, title: "Admin Page", image: sportsImage , path: "/admin" },
   ];
 
   return (

@@ -9,11 +9,17 @@ import Transportation from "./components/Transportation.jsx";
 import Sports from "./components/Sports.jsx";
 import Wildlife from "./components/Wildlife.jsx";
 import Revenue from "./components/Revenue.jsx";
+import AdminForm from "./components/AdminForm.jsx";
+import Login from "./components/Login.jsx";
+import Header from "./components/Header.jsx";
+import InviteFriendsCard from "./components/InviteFriendsCard.jsx";
+
 // Import other pages
 
 const App = () => {
   return (
     <Router>
+        <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
@@ -25,7 +31,11 @@ const App = () => {
         <Route path="/revenue" element={<Revenue />} />
         <Route path="/sports" element={<Sports />} />
         <Route path="/wildlife" element={<Wildlife />} />
-        
+        <Route path="/admin" element={<AdminForm />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/invite" element={<InviteFriendsCard />} />
+         
+
         {/* Add routes for other pages */}
       </Routes>
     </Router>

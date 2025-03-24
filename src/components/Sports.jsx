@@ -1,142 +1,221 @@
-import { 
-  Card, CardContent, Typography, Button, 
-  Container, Box, Divider, Table, TableBody, TableCell, 
-  TableContainer, TableHead, TableRow, Paper 
+import React, { useEffect, useState } from "react";
+import {
+  Card, CardContent, Typography, Button, TextField,
+  Container, Box, Divider, Paper
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Sports = () => {
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
+  const [sections, setSections] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [commentText, setCommentText] = useState("");
+  const [replyInputs, setReplyInputs] = useState({});
+  const policyHead = "KSPEP";
+
+  const userEmail = localStorage.getItem("userEmail"); // get email from login
+
+  useEffect(() => {
+    axios.get(`/mnm-api/policy/${policyHead}`)
+      .then(res => {
+        const sorted = res.data.sort((a, b) => a.sectionOrder - b.sectionOrder);
+        setSections(sorted);
+      })
+      .catch(err => console.error("Error loading policy sections", err));
+    axios.get(`/mnm-api/comments/by-policy/${policyHead}`)
+      .then(res => setComments(res.data))
+      .catch(err => console.error("Error loading comments", err));
+  }, []);
+
+  const handleCommentSubmit = () => {
+    if (!commentText || !userEmail) return;
+
+    const commentData = { userEmail, commentText, policyHead };
+
+    axios.post("/mnm-api/comments/add", commentData)
+      .then((res) => {
+        setComments(prev => [...prev, res.data]);
+        setCommentText("");
+      })
+      .catch(err => console.error("Error posting comment", err));
+  };
+
+  const handleReplySubmit = (parentCommentId) => {
+    const reply = replyInputs[parentCommentId];
+    if (!reply?.commentText || !userEmail) return;
+
+    const replyData = {
+      userEmail,
+      commentText: reply.commentText
+    };
+
+    axios.post(`/mnm-api/comments/reply/${parentCommentId}`, replyData)
+      .then(() => {
+        setComments(prev =>
+          prev.map(comment =>
+            comment.id === parentCommentId
+              ? { ...comment, replies: [...(comment.replies || []), replyData] }
+              : comment
+          )
+        );
+        setReplyInputs(prev => {
+          const updated = { ...prev };
+          delete updated[parentCommentId];
+          return updated;
+        });
+      })
+      .catch(err => console.error("Error posting reply", err));
+  };
 
   return (
     <Container maxWidth="md">
-      {/* Main Card for Sports Policy */}
       <Card sx={{ mt: 6, p: 4, boxShadow: 4, borderRadius: 3 }}>
         <CardContent>
           <Typography variant="h4" align="center" gutterBottom color="primary" fontWeight="bold">
-            Kerala Sports & Physical Education Development Policy (KSPEP)
+          Kerala Sports & Physical Education Development Policy (KSPEP)
           </Typography>
 
           <Divider sx={{ my: 3 }} />
 
-          {/* Policy Objective */}
-          <Typography variant="h5" gutterBottom color="secondary" fontWeight="bold">
-            1. Policy Objective
-          </Typography>
-          <Typography variant="body1" align="justify" paragraph>
-            The <strong>Kerala Sports & Physical Education Development Policy (KSPEP)</strong> aims to <strong>create a world-class sporting ecosystem</strong> 
-            by integrating <strong>AI-driven training, cutting-edge sports infrastructure, and school-level talent development programs</strong>.  
-            The policy focuses on <strong>grassroots sports, athlete welfare, and international-level coaching</strong>.
-          </Typography>
+          {sections.map((section, index) => (
+            <Box key={index} sx={{ mb: 6 }}>
+              <Typography variant="h5" gutterBottom color="secondary" fontWeight="bold">
+                {section.sectionOrder}. {section.sectionTitle}
+              </Typography>
+              <Box
+                component="div"
+                sx={{
+                  fontSize: "0.95rem",
+                  lineHeight: 1.7,
+                  "& table": {
+                    width: "100%",
+                    borderCollapse: "collapse",
+                    marginTop: 2,
+                  },
+                  "& th, & td": {
+                    border: "1px solid #ddd",
+                    padding: "8px",
+                    textAlign: "left",
+                  },
+                  "& th": {
+                    backgroundColor: "#f5f5f5",
+                    fontWeight: "bold",
+                  },
+                  "& tr:nth-of-type(even)": {
+                    backgroundColor: "#f9f9f9",
+                  },
+                  "& ul": {
+                    paddingLeft: "1.5rem"
+                  },
+                  "& li": {
+                    marginBottom: "0.5rem"
+                  }
+                }}
+                dangerouslySetInnerHTML={{ __html: section.htmlContent }}
+              />
+              <Divider sx={{ my: 4 }} />
+            </Box>
+          ))}
 
-          <Divider sx={{ my: 3 }} />
+          {/* Global Comments Section */}
+          <Box sx={{ mt: 4, p: 2, border: "1px solid #ccc", borderRadius: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              💬 Comments on the Policy
+            </Typography>
 
-          {/* Key Components */}
-          <Typography variant="h5" gutterBottom color="secondary" fontWeight="bold">
-            2. Key Components of the Policy
-          </Typography>
+            {comments.map((cmt, i) => (
+              <Box key={i} sx={{ mb: 2 }}>
+                <Paper sx={{ p: 2, backgroundColor: "#f9f9f9" }}>
+                  <Typography variant="body2" sx={{ fontWeight: 600 }}>{cmt.userEmail}</Typography>
+                  <Typography variant="body2">{cmt.commentText}</Typography>
 
-          {/* AI-Based Athlete Training */}
-          <Typography variant="h6" color="primary" fontWeight="bold">
-            A. AI-Based Athlete Training & Performance Analytics
-          </Typography>
-          <Typography variant="body2">
-            ✅ AI-powered <strong>motion capture and performance analysis</strong> for athletes. <br/>
-            ✅ <strong>AI-driven diet and training plans</strong> based on real-time athlete data. <br/>
-            ✅ <strong>Smart wearables and sensors</strong> for tracking injury prevention and rehabilitation.
-          </Typography>
+                  {userEmail && (
+                    <Button
+                      size="small"
+                      onClick={() => setReplyInputs(prev => ({ ...prev, [cmt.id]: {} }))}
+                      sx={{ mt: 1 }}
+                    >
+                      Reply
+                    </Button>
+                  )}
+                </Paper>
 
-          <Divider sx={{ my: 2 }} />
+                {/* Replies */}
+                {(cmt.replies || []).map((reply, j) => (
+                  <Paper
+                    key={j}
+                    sx={{
+                      ml: 4,
+                      mt: 1,
+                      p: 2,
+                      backgroundColor: "#f0f0f0",
+                      borderLeft: "3px solid #ccc"
+                    }}
+                  >
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>{reply.userEmail}</Typography>
+                    <Typography variant="body2">{reply.commentText}</Typography>
+                  </Paper>
+                ))}
 
-          {/* Sports Infrastructure */}
-          <Typography variant="h6" color="primary" fontWeight="bold">
-            B. World-Class Sports Infrastructure Development
-          </Typography>
-          <Typography variant="body2">
-            ✅ <strong>Kerala International Sports City</strong> to be built with <strong>Olympic-grade facilities</strong>. <br/>
-            ✅ <strong>AI-powered stadium management</strong> to enhance fan experience and optimize ticket pricing. <br/>
-            ✅ <strong>Multipurpose sports academies in every district</strong> for coaching and training.
-          </Typography>
+                {/* Reply Input */}
+                {userEmail && replyInputs[cmt.id] !== undefined && (
+                  <Box sx={{ ml: 4, mt: 1 }}>
+                    <TextField
+                      size="small"
+                      label="Your Reply"
+                      fullWidth
+                      multiline
+                      rows={2}
+                      onChange={(e) =>
+                        setReplyInputs(prev => ({
+                          ...prev,
+                          [cmt.id]: {
+                            ...prev[cmt.id],
+                            commentText: e.target.value
+                          }
+                        }))
+                      }
+                    />
+                    <Button
+                      variant="outlined"
+                      sx={{ mt: 1 }}
+                      onClick={() => handleReplySubmit(cmt.id)}
+                    >
+                      Submit Reply
+                    </Button>
+                  </Box>
+                )}
+              </Box>
+            ))}
 
-          <Divider sx={{ my: 2 }} />
+            {/* New Comment Input */}
+            {userEmail ? (
+              <Box sx={{ mt: 2 }}>
+                <TextField
+                  label="Add a comment"
+                  size="small"
+                  fullWidth
+                  multiline
+                  rows={2}
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                />
+                <Button
+                  variant="contained"
+                  sx={{ mt: 1 }}
+                  onClick={handleCommentSubmit}
+                >
+                  Post Comment
+                </Button>
+              </Box>
+            ) : (
+              <Typography variant="body2" sx={{ mt: 2, color: "gray" }}>
+                Please <Button size="small" onClick={() => navigate("/login")}>login</Button> to comment.
+              </Typography>
+            )}
+          </Box>
 
-          {/* School-Level Sports Integration */}
-          <Typography variant="h6" color="primary" fontWeight="bold">
-            C. School-Level Physical Education & Talent Identification
-          </Typography>
-          <Typography variant="body2">
-            ✅ <strong>Mandatory daily physical education (PE) classes</strong> in all schools. <br/>
-            ✅ AI-powered <strong>sports talent identification system</strong> to detect young athletes early. <br/>
-            ✅ <strong>Integration of esports & virtual reality training</strong> in school sports programs.
-          </Typography>
-
-          <Divider sx={{ my: 2 }} />
-
-          {/* Athlete Welfare & Career Development */}
-          <Typography variant="h6" color="primary" fontWeight="bold">
-            D. Athlete Welfare & Career Development
-          </Typography>
-          <Typography variant="body2">
-            ✅ <strong>State-funded athlete scholarships</strong> for training in international facilities. <br/>
-            ✅ <strong>Job security & pension plans</strong> for retired athletes. <br/>
-            ✅ <strong>AI-driven mental health programs</strong> for athletes under high-pressure environments.
-          </Typography>
-
-          <Divider sx={{ my: 3 }} />
-
-          {/* Revenue Model */}
-          <Typography variant="h5" gutterBottom color="secondary" fontWeight="bold">
-            3. Funding & Revenue Model
-          </Typography>
-          <TableContainer component={Paper} sx={{ mt: 2, mb: 4 }}>
-            <Table>
-              <TableHead>
-                <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
-                  <TableCell><strong>Revenue Source</strong></TableCell>
-                  <TableCell align="right"><strong>Estimated Revenue (₹ Crore/year)</strong></TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell>AI-Powered Stadium & Sports Event Ticketing</TableCell>
-                  <TableCell align="right">6,000</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Public-Private Partnerships (PPP) in Sports Academies</TableCell>
-                  <TableCell align="right">5,000</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>State Sponsorships & Athlete Endorsements</TableCell>
-                  <TableCell align="right">4,000</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Government Budget Allocation for Sports</TableCell>
-                  <TableCell align="right">8,000</TableCell>
-                </TableRow>
-                <TableRow sx={{ backgroundColor: "#e3f2fd" }}>
-                  <TableCell><strong>Total Estimated Revenue</strong></TableCell>
-                  <TableCell align="right"><strong>₹23,000 crore/year</strong></TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-
-          <Divider sx={{ my: 3 }} />
-
-          {/* Conclusion */}
-          <Typography variant="h5" gutterBottom color="secondary" fontWeight="bold">
-            4. Conclusion
-          </Typography>
-          <Typography variant="body1" align="justify" paragraph>
-            The <strong>Kerala Sports & Physical Education Development Policy (KSPEP)</strong> will transform Kerala into <strong>India’s premier sports hub</strong> 
-            by leveraging <strong>AI, modern infrastructure, and school-level sports integration</strong>.  
-            With an estimated <strong>₹23,000 crore annual revenue</strong>, Kerala will be able to <strong>train world-class athletes, host global sporting events, 
-            and promote youth participation in physical fitness</strong>.
-          </Typography>
-
-          <Divider sx={{ my: 3 }} />
-
-          {/* Back to Home Button */}
           <Box display="flex" justifyContent="center" mt={4}>
             <Button variant="contained" color="primary" size="large" onClick={() => navigate("/")}>
               Back to Home
@@ -149,3 +228,5 @@ const Sports = () => {
 };
 
 export default Sports;
+
+ 
