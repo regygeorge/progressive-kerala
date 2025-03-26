@@ -14,6 +14,8 @@ import Login from "./components/Login.jsx";
 import Header from "./components/Header.jsx";
 import InviteFriendsCard from "./components/InviteFriendsCard.jsx";
 import SignupPage from "./components/SignupPage.jsx"
+import ForgotPassword from "./components/ForgotPassword.jsx";
+import ResetPassword from "./components/ResetPassword.jsx";
 
 // Import other pages
 
@@ -36,6 +38,10 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/invite" element={<InviteFriendsCard />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        
+        
         
          
 

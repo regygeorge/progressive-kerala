@@ -78,6 +78,15 @@ const Login = () => {
         />
 
         <Box mt={2}>
+        <Typography
+  variant="body2"
+  align="right"
+  sx={{ mt: 1, cursor: "pointer", color: "primary.main" }}
+  onClick={() => navigate("/forgot-password")}
+>
+  Forgot Password?
+</Typography>
+
           <Button
             variant="contained"
             fullWidth

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -15,13 +15,18 @@ import axios from "axios";
 const SignupPage = () => {
   const [searchParams] = useSearchParams();
   const referrer = searchParams.get("ref");
+  const token = searchParams.get("token");
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     referrerEmail: referrer || "",
+    token: token || "",
   });
+
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -31,16 +36,22 @@ const SignupPage = () => {
   };
 
   const handleSignup = async () => {
+    if (!referrer || !token) {
+      setError("This signup link is invalid or expired.");
+      return;
+    }
+
     try {
       await axios.post("/mnm-api/signup", formData);
-      alert("Signup successful!");
+      setSuccess(true);
+      setError("");
     } catch (err) {
       console.error(err);
-      setError("Signup failed. Please check your invite or try again.");
+      setError(err.response?.data || "Signup failed. Please try again.");
     }
   };
 
-  if (!referrer) {
+  if (!referrer || !token) {
     return (
       <Box
         display="flex"
@@ -48,7 +59,22 @@ const SignupPage = () => {
         alignItems="center"
         minHeight="100vh"
       >
-        <Alert severity="error">Signup is by invitation only.</Alert>
+        <Alert severity="error">Signup is by valid invitation only.</Alert>
+      </Box>
+    );
+  }
+
+  if (success) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="100vh"
+      >
+        <Alert severity="success">
+          Signup successful! You can now <strong>login</strong>.
+        </Alert>
       </Box>
     );
   }
