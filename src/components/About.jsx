@@ -121,7 +121,7 @@ const About = () => {
           {/* Global Comments Section */}
           <Box sx={{ mt: 4, p: 2, border: "1px solid #ccc", borderRadius: 2 }}>
             <Typography variant="h6" gutterBottom>
-              💬 Comments on this section
+              💬 Comments:
             </Typography>
 
             {comments.map((cmt, i) => (
