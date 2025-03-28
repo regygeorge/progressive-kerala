@@ -31,45 +31,22 @@ const InviteFriendsCard = () => {
     }
   }, []);
 
-  // Generate WhatsApp invite token once inviterEmail is set
-  useEffect(() => {
-    const createWhatsappReferral = async () => {
-      try {
-        const token = crypto.randomUUID();
-        await axios.post("/mnm-api/invite", {
-          inviterEmail,
-          inviteType: "WHATSAPP",
-          token,
-        });
-        setWhatsappToken(token);
-      } catch (err) {
-        console.error("Failed to record WhatsApp referral", err);
-      }
-    };
-
-    if (inviterEmail) {
-      createWhatsappReferral();
-    }
-  }, [inviterEmail]);
-
+  
   const handleEmailInvite = async () => {
     if (!friendEmail) {
       alert("Please enter your friend's email.");
       return;
     }
-
+  
     try {
-      const token = crypto.randomUUID();
+      const token = crypto.randomUUID(); // ✅ NEW token every time
       await axios.post("/mnm-api/invite", {
         email: friendEmail,
         inviterEmail,
         inviteType: "EMAIL",
         token,
       });
-
-      // Optional: You could email them with a signup link including the token
-      // (If backend handles email sending)
-
+  
       alert("Invitation sent via email!");
       setFriendEmail("");
     } catch (error) {
@@ -77,7 +54,7 @@ const InviteFriendsCard = () => {
       alert("Failed to send invitation.");
     }
   };
-
+  
   const whatsappLink = () => {
     const inviteLink = `https://www.progressivekerala.org/signup?ref=${encodeURIComponent(
       inviterEmail
@@ -152,16 +129,39 @@ const InviteFriendsCard = () => {
           </Typography>
 
           <Button
-            variant="contained"
-            color="success"
-            component="a"
-            href={whatsappLink()}
-            target="_blank"
-            rel="noopener noreferrer"
-            fullWidth
-          >
-            Invite via WhatsApp
-          </Button>
+  variant="contained"
+  color="success"
+  fullWidth
+  onClick={async (e) => {
+    e.preventDefault();
+
+    try {
+      const token = crypto.randomUUID();
+      await axios.post("/mnm-api/invite", {
+        inviterEmail,
+        inviteType: "WHATSAPP",
+        token,
+      });
+
+      const inviteLink = `https://www.progressivekerala.org/signup?ref=${encodeURIComponent(inviterEmail)}&token=${token}`;
+      const message = `Hey! I'm inviting you to join this platform. Click here to sign up: ${inviteLink}`;
+
+      // Final encoded WhatsApp URL
+      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+
+      // Navigate (mobile-safe)
+      window.location.href = whatsappUrl;
+    } catch (err) {
+      console.error("Failed to generate WhatsApp invite", err);
+      alert("Failed to generate WhatsApp invite.");
+    }
+  }}
+>
+  Invite via WhatsApp
+</Button>
+
+
+
         </Stack>
       </CardContent>
     </Card>
