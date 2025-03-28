@@ -15,6 +15,8 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
 
+const roles = localStorage.getItem("userRole");
+
 const Header = () => {
   const [open, setOpen] = useState(false);
   const isMobile = useMediaQuery("(max-width:600px)");
@@ -41,9 +43,7 @@ const Header = () => {
             <ListItem button component={Link} to="/invite">
               <ListItemText primary="Invite Others" />
             </ListItem>
-            <ListItem button component={Link} to="/admin">
-              <ListItemText primary="Admin" />
-            </ListItem>
+           
           </>
          
 
@@ -77,7 +77,15 @@ const Header = () => {
             <Button color="inherit" component={Link} to="/">Home</Button>
          
               <>
-                <Button color="inherit" component={Link} to="/admin">Admin</Button>
+            
+              
+              {roles.includes("ROLE_ADMIN") && (
+  <Button color="inherit" component={Link} to="/admin">
+    Admin
+  </Button>
+)}
+
+ 
                 <Button color="inherit" component={Link} to="/invite">Invite Others</Button>
               </>
             

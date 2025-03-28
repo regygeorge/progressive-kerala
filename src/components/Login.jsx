@@ -38,6 +38,11 @@ const Login = () => {
       // Store token and email in localStorage
       localStorage.setItem("token", token);
       localStorage.setItem("userEmail", email); // <-- store email for Abkari page
+      
+
+      const roles = JSON.parse(response.data.roles); // ✅ convert to array
+localStorage.setItem("userRole", JSON.stringify(roles));
+
   
       // Navigate to dashboard or home
       navigate("/");
