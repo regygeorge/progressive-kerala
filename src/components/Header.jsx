@@ -38,14 +38,12 @@ const Header = () => {
           <ListItemText primary="Home" />
         </ListItem>
 
-        
-          <>
-            <ListItem button component={Link} to="/invite">
-              <ListItemText primary="Invite Others" />
-            </ListItem>
-           
-          </>
-         
+        <>
+          <ListItem button component={Link} to="/invite">
+            <ListItemText primary="Invite Others" />
+          </ListItem>
+
+        </>
 
         <ListItem button component={Link} to="/login">
           <ListItemText primary="Login" />
@@ -75,28 +73,24 @@ const Header = () => {
         {!isMobile && (
           <>
             <Button color="inherit" component={Link} to="/">Home</Button>
-         
-              <>
-            
-              
-              {roles.includes("ROLE_ADMIN") && (
-  <Button color="inherit" component={Link} to="/admin">
- 
-    Admin
-  </Button>
 
- 
-)}
+            <>
 
-{roles.includes("ROLE_ADMIN") && (
-   
-<Button color="inherit" component={Link} to="/admin-card">
-Admin Card
-</Button>
-)}
-                <Button color="inherit" component={Link} to="/invite">Invite Others</Button>
-              </>
-            
+              {Array.isArray(roles) && roles.includes("ROLE_ADMIN") && (
+                <Button color="inherit" component={Link} to="/admin">
+                  Admin
+                </Button>
+              )}
+
+              {Array.isArray(roles) && roles.includes("ROLE_ADMIN") && (
+                <Button color="inherit" component={Link} to="/admin-card">
+                  Admin Card
+                </Button>
+              )}
+
+              <Button color="inherit" component={Link} to="/invite">Invite Others</Button>
+            </>
+
             <Button color="inherit" component={Link} to="/login">Login</Button>
           </>
         )}
