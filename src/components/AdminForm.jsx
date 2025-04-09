@@ -1,37 +1,67 @@
 import React, { useEffect, useState } from "react";
 import {
-  TextField, Button, Typography, Container, Paper, Box, Divider, List, ListItem, ListItemText
+  TextField,
+  Button,
+  Typography,
+  Container,
+  Paper,
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  Select,
+  InputLabel,
+  FormControl,
+  MenuItem,
+  Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import axios from "axios";
-import TiptapEditor from "./TiptapEditor";
 import { useNavigate } from "react-router-dom";
 
 const AdminForm = () => {
-  const [policyHead, setPolicyHead] = useState("KOAP");
+  const [policyHead, setPolicyHead] = useState("");
+  const [availableHeads, setAvailableHeads] = useState([]);
   const [sectionTitle, setSectionTitle] = useState("");
-  const [htmlContent, setHtmlContent] = useState("");
+  const [sectionBody, setSectionBody] = useState("");
   const [sectionOrder, setSectionOrder] = useState("");
   const [sections, setSections] = useState([]);
   const [editingId, setEditingId] = useState(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [sectionToDelete, setSectionToDelete] = useState(null);
 
   const navigate = useNavigate();
-
-  const user = JSON.parse(localStorage.getItem("user")); // assuming user info is saved as JSON with a roles array
+  const roles = JSON.parse(localStorage.getItem("userRole") || "[]");
 
   useEffect(() => {
-    if (!user || !user.roles || !user.roles.includes("admin")) {
-      navigate("/unauthorized"); // or show message if preferred
+    if (!roles.includes("ROLE_ADMIN")) {
+      navigate("/unauthorized");
     }
   }, []);
 
+  useEffect(() => {
+    axios.get("/mnm-api/policy/heads")
+      .then((res) => {
+        setAvailableHeads(res.data);
+        if (res.data.length > 0) {
+          setPolicyHead(res.data[0]);
+        }
+      })
+      .catch((err) => console.error("Failed to fetch policy heads", err));
+  }, []);
+
   const fetchSections = () => {
-    axios.get(`http://localhost:8085/mnm-api/policy/${policyHead}`)
-      .then((res) => setSections(res.data))
+    axios.get(`/mnm-api/policy/${policyHead}`)
+      .then((res) => setSections([...res.data].sort((a, b) => a.sectionOrder - b.sectionOrder)))
       .catch((err) => console.error("Failed to fetch sections", err));
   };
 
   useEffect(() => {
-    if (user?.roles?.includes("admin")) {
+    if (policyHead) {
       fetchSections();
     }
   }, [policyHead]);
@@ -40,20 +70,20 @@ const AdminForm = () => {
     const payload = {
       policyHead,
       sectionTitle,
-      htmlContent,
-      sectionOrder: parseInt(sectionOrder)
+      htmlContent: sectionBody,
+      sectionOrder: parseInt(sectionOrder),
     };
 
     const endpoint = editingId
-      ? `http://localhost:8085/mnm-api/policy/update/${editingId}`
-      : "http://localhost:8085/mnm-api/policy/add";
+      ? `/mnm-api/policy/update/${editingId}`
+      : "/mnm-api/policy/add";
 
     const method = editingId ? "put" : "post";
 
     try {
       await axios[method](endpoint, editingId ? { ...payload, id: editingId } : payload);
       setSectionTitle("");
-      setHtmlContent("");
+      setSectionBody("");
       setSectionOrder("");
       setEditingId(null);
       fetchSections();
@@ -64,22 +94,32 @@ const AdminForm = () => {
 
   const handleEdit = (section) => {
     setSectionTitle(section.sectionTitle);
-    setHtmlContent(section.htmlContent);
+    setSectionBody(section.htmlContent);
     setSectionOrder(section.sectionOrder);
     setEditingId(section.id);
   };
 
-  if (!user || !user.roles || !user.roles.includes("admin")) {
-    return (
-      <Container maxWidth="sm" sx={{ mt: 6 }}>
-        <Paper sx={{ p: 4 }}>
-          <Typography variant="h6" color="error" align="center">
-            You are not authorized to view this page.
-          </Typography>
-        </Paper>
-      </Container>
-    );
-  }
+  const confirmDelete = (section) => {
+    setSectionToDelete(section);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDelete = async () => {
+    if (!sectionToDelete) return;
+
+    try {
+      await axios.delete(`/mnm-api/policy/delete/${sectionToDelete.id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      });
+      setDeleteDialogOpen(false);
+      setSectionToDelete(null);
+      fetchSections();
+    } catch (err) {
+      console.error("Error deleting section", err);
+    }
+  };
 
   return (
     <Container maxWidth="md">
@@ -88,13 +128,21 @@ const AdminForm = () => {
           {editingId ? "Edit" : "Add"} Policy Section
         </Typography>
 
-        <TextField
-          fullWidth
-          label="Policy Head"
-          value={policyHead}
-          onChange={(e) => setPolicyHead(e.target.value)}
-          sx={{ mb: 2 }}
-        />
+        <FormControl fullWidth sx={{ mb: 2 }}>
+          <InputLabel id="policy-head-label">Policy Head</InputLabel>
+          <Select
+            labelId="policy-head-label"
+            value={policyHead}
+            onChange={(e) => setPolicyHead(e.target.value)}
+            label="Policy Head"
+          >
+            {availableHeads.map((head) => (
+              <MenuItem key={head} value={head}>
+                {head}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
         <TextField
           fullWidth
@@ -104,11 +152,14 @@ const AdminForm = () => {
           sx={{ mb: 2 }}
         />
 
-        <TiptapEditor 
-          theme="snow"
-          value={htmlContent}
-          onChange={setHtmlContent}
-          style={{ height: "200px", marginBottom: "16px" }}
+        <TextField
+          fullWidth
+          label="Section Body (HTML)"
+          multiline
+          rows={6}
+          value={sectionBody}
+          onChange={(e) => setSectionBody(e.target.value)}
+          sx={{ mb: 2 }}
         />
 
         <TextField
@@ -132,9 +183,14 @@ const AdminForm = () => {
             <ListItem
               key={sec.id}
               secondaryAction={
-                <Button onClick={() => handleEdit(sec)} variant="outlined">
-                  Edit
-                </Button>
+                <Box sx={{ display: "flex", gap: 1 }}>
+                  <Button onClick={() => handleEdit(sec)} variant="outlined" size="small">
+                    Edit
+                  </Button>
+                  <Button onClick={() => confirmDelete(sec)} variant="outlined" color="error" size="small">
+                    Delete
+                  </Button>
+                </Box>
               }
             >
               <ListItemText
@@ -145,6 +201,24 @@ const AdminForm = () => {
           ))}
         </List>
       </Paper>
+
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+      >
+        <DialogTitle>Delete Confirmation</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete the section titled <strong>{sectionToDelete?.sectionTitle}</strong>?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+          <Button onClick={handleDelete} color="error" variant="contained">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

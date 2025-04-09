@@ -38,6 +38,18 @@ const Login = () => {
       // Store token and email in localStorage
       localStorage.setItem("token", token);
       localStorage.setItem("userEmail", email); // <-- store email for Abkari page
+      
+      let roles = [];
+
+      if (response.data.roles) {
+        try {
+          roles = JSON.parse(response.data.roles);
+        } catch (error) {
+          console.error("Failed to parse roles:", error);
+        }
+      }rray
+localStorage.setItem("userRole", JSON.stringify(roles));
+
   
       // Navigate to dashboard or home
       navigate("/");
@@ -78,6 +90,15 @@ const Login = () => {
         />
 
         <Box mt={2}>
+        <Typography
+  variant="body2"
+  align="right"
+  sx={{ mt: 1, cursor: "pointer", color: "primary.main" }}
+  onClick={() => navigate("/forgot-password")}
+>
+  Forgot Password?
+</Typography>
+
           <Button
             variant="contained"
             fullWidth
