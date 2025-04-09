@@ -47,7 +47,7 @@ const Login = () => {
         } catch (error) {
           console.error("Failed to parse roles:", error);
         }
-      }rray
+      }
 localStorage.setItem("userRole", JSON.stringify(roles));
 
   
