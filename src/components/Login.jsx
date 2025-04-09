@@ -39,8 +39,15 @@ const Login = () => {
       localStorage.setItem("token", token);
       localStorage.setItem("userEmail", email); // <-- store email for Abkari page
       
+      let roles = [];
 
-      const roles = JSON.parse(response.data.roles); // ✅ convert to array
+      if (response.data.roles) {
+        try {
+          roles = JSON.parse(response.data.roles);
+        } catch (error) {
+          console.error("Failed to parse roles:", error);
+        }
+      }rray
 localStorage.setItem("userRole", JSON.stringify(roles));
 
   
