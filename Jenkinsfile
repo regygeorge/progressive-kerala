@@ -21,7 +21,7 @@ pipeline {
         stage('Checkout KP Project') {
             steps {
                 dir('kp-project') {
-                    checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: "${REACT_REPO}", credentialsId: 'github-pat']]])
+                    checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: "${REACT_REPO}", credentialsId: 'github-pat']]])
                 }
             }
         }
